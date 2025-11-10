@@ -30,9 +30,19 @@ export function OnSpawnerSpawned(
 ): void {
   if (isAI(player)) {
     let srSoldier = SrSoldier.get(player, spawner);
-    if (srSoldier) {
-      srSoldier.setState();
-    }
+    // if (srSoldier) {
+    //   srSoldier.setAIState();
+    // }
+  } else return;
+}
+
+
+export function OnPlayerSpawned(player: mod.Player): void {
+  if (isAI(player)) {
+    mod.AIEnableTargeting(player, false);
+    mod.AIEnableShooting(player, false);
+    mod.AIIdleBehavior(player);
+    mod.SetPlayerMaxHealth(player, AI_MAX_HEALTH);
   } else { // is player
     mod.SetPlayerMovementSpeedMultiplier(player, PLAYER_MOVE_SPEED_MULTI);
     mod.SetPlayerMaxHealth(player, PLAYER_MAX_HEALTH);
@@ -52,7 +62,7 @@ class SrSoldier {
     this.spawner = spawner;
   }
 
-  setState(): void {
+  setAIState(): void {
     let player = this.player;
     mod.AIEnableTargeting(player, false);
     mod.AIEnableShooting(player, false);
@@ -97,3 +107,7 @@ function isAI(player: mod.Player): boolean {
 // TODO
 
 // SetVehicleSpawnerAutoSpawn
+// SetInventoryAmmo
+// SetInventoryMagazineAmmo
+// InventorySlots
+// GetInventoryAmmo
