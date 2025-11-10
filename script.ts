@@ -1,6 +1,6 @@
 const AI_NUM = 24;
-const PLAYER_MOVE_SPEED_MULTI = 3;
-const AI_MAX_HEALTH = 10;
+const PLAYER_MOVE_SPEED_MULTI = 10;
+const AI_MAX_HEALTH = 1;
 const PLAYER_MAX_HEALTH = 1000;
 let spawnerID = Array.from({ length: AI_NUM }, (_, i) => i + 1);
 
@@ -21,6 +21,12 @@ export function OnPlayerDied(player: mod.Player): void {
       spawnAI(deadAI.spawner);
       SrSoldier.removeDeadAI(id);
     }
+  }
+}
+
+export function OnPlayerFired(player: mod.Player): void {
+  if (!isAI(player)) {
+    giveInfiniteAmmo(player);
   }
 }
 
@@ -102,6 +108,18 @@ function isAI(player: mod.Player): boolean {
   return mod.GetSoldierState(player, mod.SoldierStateBool.IsAISoldier);
 }
 
+function giveInfiniteAmmo(player: mod.Player): void {
+  for (let slot of [
+    mod.InventorySlots.PrimaryWeapon,
+    mod.InventorySlots.SecondaryWeapon,
+    mod.InventorySlots.Throwable,
+    mod.InventorySlots.GadgetOne,
+    mod.InventorySlots.GadgetTwo,
+  ]) {
+    mod.SetInventoryAmmo(player, slot, 9999);          
+    mod.SetInventoryMagazineAmmo(player, slot, 999);
+  }
+}
 
 
 // TODO
