@@ -30,9 +30,9 @@ export function OnSpawnerSpawned(
 ): void {
   if (isAI(player)) {
     let srSoldier = SrSoldier.get(player, spawner);
-    // if (srSoldier) {
-    //   srSoldier.setAIState();
-    // }
+    if (srSoldier) {
+      srSoldier.setAIState();
+    }
   } else return;
 }
 
