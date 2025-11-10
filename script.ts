@@ -1,4 +1,5 @@
 const AI_NUM = 24;
+const PLAYER_MOVE_SPEED_MULTI = 3;
 let spawnerID = Array.from({ length: AI_NUM }, (_, i) => i + 1);
 
 export async function OnGameModeStarted() {
@@ -18,6 +19,8 @@ export function OnPlayerDied(player: mod.Player): void {
       spawnAI(deadAI.spawner);
       SrSoldier.removeDeadAI(id);
     }
+  } else { // is player
+    mod.SetPlayerMovementSpeedMultiplier(player, PLAYER_MOVE_SPEED_MULTI);
   }
 }
 
@@ -49,6 +52,7 @@ class SrSoldier {
   setState(): void {
     let player = this.player;
     mod.AIEnableTargeting(player, false);
+    mod.AIEnableShooting(player, false);
     mod.AIIdleBehavior(player);
   }
 
@@ -83,3 +87,9 @@ function spawnAI(spawner: mod.Spawner): void {
 function isAI(player: mod.Player): boolean {
   return mod.GetSoldierState(player, mod.SoldierStateBool.IsAISoldier);
 }
+
+
+
+// TODO
+
+// SetVehicleSpawnerAutoSpawn
