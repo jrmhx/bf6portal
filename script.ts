@@ -1,7 +1,7 @@
 const AI_NUM = 24;
-const PLAYER_MOVE_SPEED_MULTI = 10;
-const AI_MAX_HEALTH = 1;
-const PLAYER_MAX_HEALTH = 1000;
+const PLAYER_MOVE_SPEED_MULTI = 2.0; 
+const AI_MAX_HEALTH = 20; 
+const PLAYER_MAX_HEALTH = 200; 
 let spawnerID = Array.from({ length: AI_NUM }, (_, i) => i + 1);
 
 export async function OnGameModeStarted() {
@@ -49,9 +49,11 @@ export function OnPlayerSpawned(player: mod.Player): void {
     mod.AIEnableShooting(player, false);
     mod.AIIdleBehavior(player);
     mod.SetPlayerMaxHealth(player, AI_MAX_HEALTH);
-  } else { // is player
+  } else { 
     mod.SetPlayerMovementSpeedMultiplier(player, PLAYER_MOVE_SPEED_MULTI);
     mod.SetPlayerMaxHealth(player, PLAYER_MAX_HEALTH);
+    
+    giveInfiniteAmmo(player);
   }
 }
 
@@ -109,15 +111,20 @@ function isAI(player: mod.Player): boolean {
 }
 
 function giveInfiniteAmmo(player: mod.Player): void {
-  for (let slot of [
+  const slots = [
     mod.InventorySlots.PrimaryWeapon,
     mod.InventorySlots.SecondaryWeapon,
     mod.InventorySlots.Throwable,
     mod.InventorySlots.GadgetOne,
     mod.InventorySlots.GadgetTwo,
-  ]) {
-    mod.SetInventoryAmmo(player, slot, 9999);          
-    mod.SetInventoryMagazineAmmo(player, slot, 999);
+  ];
+  
+  for (let slot of slots) {
+    try {
+      mod.SetInventoryAmmo(player, slot, 999);
+      mod.SetInventoryMagazineAmmo(player, slot, 999);
+    } catch (e) {
+    }
   }
 }
 
