@@ -1,5 +1,7 @@
 const AI_NUM = 24;
 const PLAYER_MOVE_SPEED_MULTI = 3;
+const AI_MAX_HEALTH = 10;
+const PLAYER_MAX_HEALTH = 1000;
 let spawnerID = Array.from({ length: AI_NUM }, (_, i) => i + 1);
 
 export async function OnGameModeStarted() {
@@ -19,8 +21,6 @@ export function OnPlayerDied(player: mod.Player): void {
       spawnAI(deadAI.spawner);
       SrSoldier.removeDeadAI(id);
     }
-  } else { // is player
-    mod.SetPlayerMovementSpeedMultiplier(player, PLAYER_MOVE_SPEED_MULTI);
   }
 }
 
@@ -33,7 +33,10 @@ export function OnSpawnerSpawned(
     if (srSoldier) {
       srSoldier.setState();
     }
-  } else return;
+  } else { // is player
+    mod.SetPlayerMovementSpeedMultiplier(player, PLAYER_MOVE_SPEED_MULTI);
+    mod.SetPlayerMaxHealth(player, PLAYER_MAX_HEALTH);
+  }
 }
 
 class SrSoldier {
@@ -54,6 +57,7 @@ class SrSoldier {
     mod.AIEnableTargeting(player, false);
     mod.AIEnableShooting(player, false);
     mod.AIIdleBehavior(player);
+    mod.SetPlayerMaxHealth(player, AI_MAX_HEALTH);
   }
 
   static get(player: mod.Player, spawner: mod.Spawner): SrSoldier | undefined {
